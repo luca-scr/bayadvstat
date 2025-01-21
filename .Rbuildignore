@@ -1,0 +1,13 @@
+aux$
+log$
+^\.Rproj\.user$
+^.*\.Rproj$
+^Makefile$
+^cran-comments\.md$
+^README\.md$
+misc/
+revdep/
+.DS_Store
+^revdep$
+^docs$
+^pkgdown$
