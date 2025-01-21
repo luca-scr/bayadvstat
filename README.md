@@ -16,11 +16,11 @@ An R meta-package accompanying the course *Introduction to Bayesian Inference* (
 
 - Install **Stan**:
 
-  - R package *cmdstanr* by running the following command in R
+  - install R package *cmdstanr* by running the following command in R
     (preferably in a fresh R session or restarting your current session)
     ```{r}
-    install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev"", getOption("repos")))
-      ```
+    install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev", getOption("repos")))
+    ```
 
   - *cmdstanr* requires a working installation of *CmdStan*, the shell interface to Stan.
     ```{r}
