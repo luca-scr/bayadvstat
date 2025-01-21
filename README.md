@@ -8,16 +8,18 @@ An R meta-package accompanying the course *Introduction to Bayesian Inference* (
 
 - Update **R** to the latest version available at https://cloud.r-project.org
 
-- On Windows OS, install *RTools: Toolchains for building R and R packages from source on Windows* from https://cran.r-project.org/bin/windows/Rtools/
+- Install the C++ toolchain
 
-  On Linux and MacOS, see instructions at https://mc-stan.org/docs/cmdstan-guide/installation.html#cpp-toolchain
+  - On Windows OS, install [RTools](https://cran.r-project.org/bin/windows/Rtools/)
+
+  - On Linux and MacOS, see [instructions](https://mc-stan.org/docs/cmdstan-guide/installation.html#cpp-toolchain)
 
 - Install **Stan** by installing:
 
   1. R package *cmdstanr* by running the following command in R
   (preferably in a fresh R session or restarting your current session)
   ```{r}
-  install.packages("cmdstanr", repos = c('https://stan-dev.r-universe.dev', getOption("repos")))
+  install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev"", getOption("repos")))
   ```
 
   2. *cmdstanr* requires a working installation of *CmdStan*, the shell interface to Stan.
@@ -38,7 +40,7 @@ An R meta-package accompanying the course *Introduction to Bayesian Inference* (
   cmdstan_version()
   ```
 
-  More info are available at https://mc-stan.org/cmdstanr/articles/cmdstanr.html
+  More info are available at [Getting started with CmdStanR](https://mc-stan.org/cmdstanr/articles/cmdstanr.html)
 
 
 - Install/update `devtools` package to the latest version:
@@ -67,11 +69,10 @@ To check that everything is working fine:
 # get stan file
 pkg_path = system.file(package = "bayadvstat")
 stan_file = file.path(pkg_path, "stan", "beta-binomial.stan")
-# print stan file
-cat(readLines(stan_file), sep = "\n")
 # compile stan file
 model = cmdstanr::cmdstan_model(stan_file)
-
+# print stan code
+model$print()
 # fit model
 fit = model$sample(data = list(y = 7, n = 11,         # data
                                alpha = 2, beta = 5),  # prior
@@ -80,4 +81,7 @@ fit = model$sample(data = list(y = 7, n = 11,         # data
                    chains = 4,
                    seed = 123)
 fit
+bayesplot_theme_set(theme_gray(base_family = "sans"))
+color_scheme_set("red")
+mcmc_hist(fit$draws("theta"))
 ```
