@@ -1,16 +1,16 @@
 Package: bayadvstat
 Type: Package
 Version: 0.1
+Date: 2025-01-21
 Authors@R: c(
   person("Luca", "Scrucca", role = c("aut", "cre"),
          email = "luca.scrucca@unibo.it",
          comment = c(ORCID = "0000-0003-3826-0484")))
-Date: 2025-01-20
 Title: Bayesian Advanced Statistics
 Description: An R meta-package accompanying the course 
   "Introduction to Bayesian Inference" (Statistica Avanzata - Modulo II).
 Depends: R (>= 4.0)
-Imports: ggplot2, ggthemes, patchwork, data.table, readxl,
+Imports: ggplot2, ggthemes, patchwork, data.table, readxl, mclust, mclustAddons,
          bayesrules, cmdstanr, rstanarm, bayesplot, posterior
 Suggests: stats, knitr, rmarkdown, quarto
 License: GPL (>= 2)

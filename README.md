@@ -2,11 +2,15 @@
 
 ## Description
 
-An R meta-package accompanying the course *Introduction to Bayesian Inference* (Statistica Avanzata - Modulo II) at Alma Mater Studiorum – Università di Bologna, Italy.
+An R meta-package accompanying the course *Introduction to Bayesian Inference* (Statistica Avanzata - Modulo II), Alma Mater Studiorum – Università di Bologna, Campus Rimini, Italy.
 
 ## Install
 
 - Update **R** to the latest version available at https://cloud.r-project.org
+
+- On Windows OS, install *RTools: Toolchains for building R and R packages from source on Windows* from https://cran.r-project.org/bin/windows/Rtools/
+
+  On Linux and MacOS, see instructions at https://mc-stan.org/docs/cmdstan-guide/installation.html#cpp-toolchain
 
 - Install **Stan** by installing:
 
@@ -16,10 +20,13 @@ An R meta-package accompanying the course *Introduction to Bayesian Inference* (
   install.packages("cmdstanr", repos = c('https://stan-dev.r-universe.dev', getOption("repos")))
   ```
 
-  2. *cmdstanr* requires a working installation of *CmdStan*, the shell interface to Stan.\
+  2. *cmdstanr* requires a working installation of *CmdStan*, the shell interface to Stan.
+  ```{r}
+  library(cmdstanr)
+  ```
   To check that your toolchain is set up properly use:
   ```{r}
-  check_cmdstan_toolchain()
+  check_cmdstan_toolchain(fix = TRUE)
   ```
   If your toolchain is configured correctly then CmdStan can be installed by calling:
   ```{r}
