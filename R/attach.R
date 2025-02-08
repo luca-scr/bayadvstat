@@ -1,5 +1,6 @@
 core <- c("ggplot2", "ggthemes", "patchwork", "data.table", "readxl", 
-          "bayesrules", "cmdstanr", "rstanarm", "bayesplot", "posterior")
+          "bayesrules", "cmdstanr", "rstanarm", "bayesplot", "posterior",
+          "extraDistr")
 					
 # Attach the package from the same package library it was
 # loaded from before. https://github.com/tidyverse/tidyverse/issues/171
@@ -15,7 +16,6 @@ same_library <- function(pkg)
 
 bayadvstat_attach <- function(to_load) 
 {
-
   pkgs <- utils::packageDescription("bayadvstat")$Imports
   pkgs <- strsplit(gsub("\n", "", gsub(" ", "", pkgs)), ",")[[1]]
   available <- utils::installed.packages()[,"Package"]

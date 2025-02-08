@@ -2,31 +2,33 @@
 % Please edit documentation in R/describe.R
 \name{describe}
 \alias{describe}
-\title{Summary statistics for numerical data}
+\alias{print.describe}
+\title{Descriptive statistics}
 \usage{
-describe(x, probs = c(0, 0.25, 0.75, 1), ...)
+describe(data, by, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
+
+\method{print}{describe}(x, digits = getOption("digits"), ...)
 }
 \arguments{
-\item{x}{a vector (univariate), data.frame or matrix (multivariate case)
-of numerical values.}
+\item{data}{a matrix, data.frame, or vector.}
 
-\item{probs}{a numeric vector of probabilities with values in [0,1] used
-for computing quantiles.}
+\item{by}{the name of a variable to condition on,}
 
 \item{\dots}{additional arguments to be passed to the low level functions.}
+
+\item{x}{an object of class `describe`.}
+
+\item{digits}{significant digits.}
 }
 \value{
 A `data.frame` containing a description of the dataset.
 }
 \description{
-Compute summary statistics for the input data.
+Compute descriptive statistics for input data.
 }
 \examples{
 
-x = rnorm(200, 10, 5)
-describe(x)
-xy = data.frame(x = rnorm(200, 10, 5), y = rchisq(200, 3))
-describe(xy)
-describe(xy[,"y"])
+describe(iris)
+describe(iris, by = Species)
 
 }
