@@ -2,7 +2,7 @@
 
 ## Description
 
-An R meta-package accompanying the course *Introduction to Bayesian Inference* (Statistica Avanzata - Modulo II), Alma Mater Studiorum – Università di Bologna, Campus Rimini, Italy.
+An R meta-package accompanying the course *Introduction to Bayesian Inference* (Statistica Avanzata - Modulo 2), Alma Mater Studiorum – Università di Bologna, Campus Rimini, Italy.
 
 ## Install
 
@@ -49,7 +49,7 @@ An R meta-package accompanying the course *Introduction to Bayesian Inference* (
   install.packages("devtools")
   ```
 
-- Install/update `bayadvstat` package
+- Install/update `bayadvstat` package from GitHub:
 
   ```{r}
   devtools::install_github("luca-scr/bayadvstat")
@@ -67,12 +67,12 @@ To check that everything is working fine:
 
 ```{r}
 # get stan file
-pkg_path = system.file(package = "bayadvstat")
-stan_file = file.path(pkg_path, "stan", "beta-binomial.stan")
+stan_file = file.path(system.file(package = "bayadvstat"), 
+                      "stan", "beta-binomial.stan")
 # compile stan file
-model = cmdstanr::cmdstan_model(stan_file)
+model = cmdstan_model(stan_file)
 # print stan code
-model$print()
+print(model)
 # fit model
 fit = model$sample(data = list(y = 7, n = 11,         # data
                                alpha = 2, beta = 5),  # prior
@@ -80,8 +80,10 @@ fit = model$sample(data = list(y = 7, n = 11,         # data
                    iter_sampling = 4000,
                    chains = 4,
                    seed = 123)
-fit
-bayesplot_theme_set(theme_gray(base_family = "sans"))
-color_scheme_set("red")
-mcmc_hist(fit$draws("theta"))
+summary(fit)
+plotDiagnostic(fit)
+plotDiagnostic(fit, what = "dens")
+plotDiagnostic(fit, what = "acf")
+plotPosterior(fit)
 ```
+

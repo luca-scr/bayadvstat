@@ -2,28 +2,19 @@
 % Please edit documentation in R/modsel.R
 \name{WAIC}
 \alias{WAIC}
-\title{Watanabe–Akaike Information Criterion for `stanreg` model object.}
+\title{Watanabe-Akaike Information Criterion}
 \usage{
 WAIC(object, ...)
 }
 \arguments{
-\item{object}{an object returned by `stan_glm()` function.}
+\item{object}{a fitted model object.}
 
-\item{\dots}{additional arguments to be passed to the low level functions.}
+\item{\dots}{other arguments.}
 }
 \value{
 The value of WAIC.
 }
 \description{
-Return WAIC for fitted `stanreg` model.
-}
-\details{
-Only available for `family = gaussian(link = "identity")`.
-}
-\examples{
-x = rnorm(100)
-y = 1 + 0.5*x + rnorm(100, 0, 0.5)
-mod = stan_glm(y ~ x, data = data.frame(x, y))
-WAIC(mod)
-
+Generic method for computing Watanabe-Akaike
+Information Criterion (WAIC)
 }

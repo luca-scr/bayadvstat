@@ -11,3 +11,4 @@ revdep/
 ^revdep$
 ^docs$
 ^pkgdown$
+^inst/stan/[^.]+$

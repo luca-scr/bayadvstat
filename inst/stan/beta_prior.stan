@@ -3,8 +3,8 @@
 //
 
 data {
-  real<lower=0> alpha;                 // beta shape1 parameter
-  real<lower=0> beta;                  // beta shape2 parameter
+  real<lower=0> alpha;                 // shape1 parameter of beta prior
+  real<lower=0> beta;                  // shape2 parameter of beta prior
 }
 
 generated quantities {

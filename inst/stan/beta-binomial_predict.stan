@@ -5,9 +5,9 @@
 data {
   int<lower=0> y;                      // binomial number of successes
   int<lower=1> n;                      // binomial number of trials
-  real<lower=0> alpha;                 // beta shape1 parameter
-  real<lower=0> beta;                  // beta shape2 parameter
-  int<lower=1> n_pred;                 // binomial number of predict trials
+  real<lower=0> alpha;                 // shape1 parameter of beta prior
+  real<lower=0> beta;                  // shape2 parameter of beta prior
+  int<lower=1> n_pred;                 // number of trials for predictions
 }                                     
                                       
 parameters {                          

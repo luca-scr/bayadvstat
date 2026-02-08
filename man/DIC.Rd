@@ -2,28 +2,19 @@
 % Please edit documentation in R/modsel.R
 \name{DIC}
 \alias{DIC}
-\title{Deviance Information Criterion for `stanreg` model object.}
+\title{Deviance Information Criterion}
 \usage{
 DIC(object, ...)
 }
 \arguments{
-\item{object}{an object returned by `stan_glm()` function.}
+\item{object}{a fitted model object.}
 
-\item{\dots}{additional arguments to be passed to the low level functions.}
+\item{\dots}{other arguments.}
 }
 \value{
 The value of DIC.
 }
 \description{
-Return DIC for fitted `stanreg` model.
-}
-\details{
-Only available for `family = gaussian(link = "identity")`.
-}
-\examples{
-x = rnorm(100)
-y = 1 + 0.5*x + rnorm(100, 0, 0.5)
-mod = stan_glm(y ~ x, data = data.frame(x, y))
-DIC(mod)
-
+Generic method for computing Deviance Information
+Criterion (DIC)
 }

@@ -1,6 +1,11 @@
-core <- c("ggplot2", "ggthemes", "patchwork", "data.table", "readxl", 
-          "bayesrules", "cmdstanr", "rstanarm", "bayesplot", "posterior",
-          "extraDistr")
+#' @importFrom stats coef density dnorm formula median model.frame model.matrix model.response na.omit nobs quantile sd var
+#' @importFrom grDevices extendrange nclass.FD nclass.Sturges
+#' @importFrom utils install.packages
+    
+core <- c("ggplot2", "ggthemes", "patchwork", 
+          "data.table", "readxl",
+          "bayesrules", "cmdstanr", "brms", 
+          "bayesplot", "posterior")
 					
 # Attach the package from the same package library it was
 # loaded from before. https://github.com/tidyverse/tidyverse/issues/171
@@ -8,10 +13,11 @@ same_library <- function(pkg)
 {
   loc <- if (pkg %in% loadedNamespaces()) 
             dirname(getNamespaceInfo(pkg, "path"))
-  do.call(
-    "library",
-    list(pkg, lib.loc = loc, character.only = TRUE, warn.conflicts = FALSE)
-  )
+  do.call("library",
+          list(pkg, lib.loc = loc, 
+               character.only = TRUE, 
+               quietly = TRUE,
+               warn.conflicts = FALSE))
 }
 
 bayadvstat_attach <- function(to_load) 
@@ -42,7 +48,8 @@ bayadvstat_attach <- function(to_load)
     crayon::col_align(versions, max(crayon::col_nchar(versions)))
   )
 
-  if (length(packages) %% 2 == 1) {
+  if (length(packages) %% 2 == 1) 
+  {
     packages <- append(packages, "")
   }
   col1 <- seq_len(length(packages) / 2)
@@ -50,9 +57,7 @@ bayadvstat_attach <- function(to_load)
 
   msg(paste(info, collapse = "\n"), startup = TRUE)
 
-  suppressPackageStartupMessages(
-    lapply(to_load, same_library)
-  )
+  suppressPackageStartupMessages(lapply(to_load, same_library))
 
   invisible()
 }

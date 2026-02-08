@@ -7,9 +7,11 @@
 #' 
 #' @param data a matrix, data.frame, or vector.
 #' @param by the name of a variable to condition on,
+#' @param probs a vector of values in \eqn{[0,1]} specifying the quantiles to 
+#'  be computed. 
 #' @param digits significant digits.
 #' @param x an object of class `describe`.
-#' @param \dots additional arguments to be passed to the low level functions.
+#' @param \dots additional arguments.
 #'
 #' @return A `data.frame` containing a description of the dataset. 
 #'
@@ -51,7 +53,6 @@ describe <- function(data, by, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
     #
     x <- split(data[setdiff(vars_name, by_name)], by)
     out <- vector("list", length = nlevels(by))
-    # browser()
     for(i in seq(nlevels(by)))
     {
       out[[i]] <- describe(x[[i]])
@@ -62,7 +63,7 @@ describe <- function(data, by, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
     class(out) <- c("describe")
     return(out)
   }
-  
+
   nvar <- length(vars_name)
   obj <- vector(mode = "list", length = nvar)
   # names(obj) <- if(nvar > 1) vars_name else data_name
@@ -74,15 +75,19 @@ describe <- function(data, by, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
   for(j in seq(nvar))
   {
     x <- data[,j]
-    if(is.factor(x) | typeof(x) == "character" | typeof(x) == "logical")
+    if(inherits(x, "factor") | 
+       inherits(x, "character") | 
+       inherits(x, "logical"))
     {
       type[j] <- "factor"
       out <- summary(as.factor(x))
-      obj[[j]] <- data.frame("count" = out, "%" = out/sum(out)*100)
-    } else if(any(class(x) == "POSIXt"))
+      obj[[j]] <- data.frame("count" = out, 
+                             "%" = out/sum(out)*100, 
+                             check.names = FALSE)
+    } else if(inherits(x, "POSIXt") | inherits(x, "Date"))
     {
-      type[j] <- "numeric"
-      obj[[j]] <- as.data.frame(summary(x))
+      type[j] <- "POSIXt"
+      obj[[j]] <- as.data.frame(summary(x)[c(1,6)])
     } else
     {
       type[j] <- "numeric"
@@ -126,34 +131,40 @@ print.describe <- function(x, digits = getOption("digits"), ...)
   }
 
   descr <- x$describe
-  isNum <- (x$type == "numeric")
-
+  isNum   <- (x$type == "numeric")
+  isFct   <- (x$type == "factor")
+  isPOSIX <- (x$type == "POSIXt")
+  
   if(sum(isNum) > 0)
   {
-    out1 <- do.call("rbind",descr[isNum])
+    out1 <- do.call("rbind", descr[isNum])
     print(zapsmall(out1, digits = digits))
   }
-
-  if(sum(!isNum) > 0)
-  {
-    if(sum(isNum) > 0) cat("\n")
-    out2 <- descr[!isNum]
-    for(j in seq(out2))
+  
+  if(sum(isFct) > 0)
+  { 
+    out1 <- descr[isFct]
+    for(j in seq(out1))
     {
-      if(is.vector(out2[[j]]))
-      {
-        out2[[j]] <- do.call("rbind", out2[j])
-        print(zapsmall(out2[[j]], digits = digits))
-      } else
-      {
-        outj <- zapsmall(as.data.frame(out2[[j]]), digits = digits)
-        outj <- cbind(rownames(outj), outj)
-        colnames(outj) <- c(names(out2)[j], colnames(outj)[-1])
-        print(outj, row.names = FALSE)
-      }
-      if(j < length(out2)) cat("\n")
+      cat("\n")
+      outj <- zapsmall(out1[[j]], digits = digits)
+      outj <- cbind(rownames(outj), outj)
+      colnames(outj) <- c(names(out1)[j], colnames(outj)[-1])
+      print(outj, row.names = FALSE)
     }
   }
-
+    
+  if(sum(isPOSIX) > 0)
+  {
+    out1 <- descr[isPOSIX]
+    for(j in seq(out1))
+    {
+      cat("\n")
+      outj <- t(out1[[j]])
+      rownames(outj) <- names(out1)[j]
+      print(noquote(outj))
+    }
+  }
+  
   invisible()
 }

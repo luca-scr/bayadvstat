@@ -14,14 +14,17 @@ describe(data, by, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
 
 \item{by}{the name of a variable to condition on,}
 
-\item{\dots}{additional arguments to be passed to the low level functions.}
+\item{probs}{a vector of values in \eqn{[0,1]} specifying the quantiles to
+be computed.}
 
-\item{x}{an object of class `describe`.}
+\item{\dots}{additional arguments.}
+
+\item{x}{an object of class \code{describe}.}
 
 \item{digits}{significant digits.}
 }
 \value{
-A `data.frame` containing a description of the dataset.
+A \code{data.frame} containing a description of the dataset.
 }
 \description{
 Compute descriptive statistics for input data.
