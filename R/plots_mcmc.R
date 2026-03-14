@@ -71,6 +71,7 @@ plotDiagnostic <- function(object, pars = NULL,
   pars_names = pars_names[!grepl("^\\..|__$", pars_names)]
   pars = if(is.null(pars)) pars_names else pars_names[match(pars, pars_names)]
   stopifnot(any(pars %in% pars_names))
+  
   if(length(pars) > 1)
   {
     out = lapply(pars, function(x) 
@@ -89,7 +90,6 @@ plotDiagnostic <- function(object, pars = NULL,
         scale_color_manual("Chain", values = .chain_colors(nchains)) +
         labs(subtitle = paste0("Rhat = ", round(rhat,4)), 
              x = "Iterations") )
-    return(plot)
   }
   
   if(what == "dens")
@@ -105,7 +105,6 @@ plotDiagnostic <- function(object, pars = NULL,
         lims(x = xlim, y = ylim) +
         theme(axis.text.y = element_text(),
               axis.ticks.y = element_line()) )
-    return(plot)
   }
 
   if(what == "acf")
@@ -129,12 +128,15 @@ plotDiagnostic <- function(object, pars = NULL,
       geom_point() +
       scale_color_manual(values = .chain_colors(nchains)) +
       labs(subtitle = subtitle, 
-           y = paste0("Autocorrelation (", par, ")")) +
-      bayesplot_theme_get()
-    return(plot)
+           y = paste0("Autocorrelation (", par, ")"))
   }
-
-  return()
+  
+  plot = plot +     
+    bayesplot_theme_get() +
+    theme(axis.text.y = element_text(angle = 90, hjust = 0.5),
+          axis.title.y = element_text(margin = margin(r = 10)))
+  
+  return(plot)
 }
 
 #' @name plotPosterior
@@ -198,6 +200,8 @@ plotPosterior <- function(object, pars = NULL,
   center  = match.arg(center, choices = eval(formals(plotPosterior)$center))
   level = as.numeric(min(max(0, level), 1))
   
+  # this is ok for `CmdStanMCMC` objects but not for `brmsfit`
+  # draws = object$draws(format = "df", variables = pars) 
   draws = posterior::as_draws_df(object, variable = pars)
   nchains = length(unique(draws$.chain))
   # select and check par among available parameters (by dropping those with
@@ -206,6 +210,7 @@ plotPosterior <- function(object, pars = NULL,
   pars_names = pars_names[!grepl("^\\..|__$", pars_names)]
   pars = if(is.null(pars)) pars_names else pars_names[match(pars, pars_names)]
   stopifnot(any(pars %in% pars_names))
+  
   if(length(pars) > 1)
   {
     out = lapply(pars, function(x) 
@@ -216,19 +221,35 @@ plotPosterior <- function(object, pars = NULL,
 
   par = pars[1]
   r = extendrange(draws[[par]], f = 0)
-  brks = seq(min(r), max(r), 
-             length.out = max(nclass.FD(draws[[par]]), 
-                              nclass.Sturges(draws[[par]])))
+  is_discrete = is.integer(draws[[par]]) || 
+                is.factor(draws[[par]]) || 
+                is.character(draws[[par]]) ||
+                all(draws[[par]] %% 1 == 0, na.rm = TRUE)
   
-  plot = ggplot(data = draws, 
-                aes(.data[[par]])) + 
-    geom_histogram(aes(y = after_stat(density)), 
-                   breaks = brks, 
-                   fill = .get_color("lh"),
-                   color = bayesplot_theme_get()$panel.background$fill) +
+  if (is_discrete) 
+  { 
+    plot = ggplot(data = draws, 
+                  aes(.data[[par]])) + 
+      geom_bar(aes(y = after_stat(count / sum(count))),
+               fill = .get_color("lh"),
+               width = 1/4) +
+      ylab("prob")
+  } else
+  {
+    brks = seq(min(r), max(r), 
+               length.out = max(nclass.FD(draws[[par]]), 
+                                nclass.Sturges(draws[[par]]))) 
+    plot = ggplot(data = draws, 
+                  aes(.data[[par]])) + 
+      geom_histogram(aes(y = after_stat(density)), 
+                     breaks = brks, 
+                     fill = .get_color("lh"),
+                     color = bayesplot_theme_get()$panel.background$fill)
+  }
+  plot = plot +
     scale_x_continuous(breaks = pretty(draws[[par]], 5)) +
     scale_y_continuous(expand = expansion(mult = c(0.03,0.08)))
-  
+
   text_size = 1.1*theme_get()$text$size*(25.4 / 72.27)
   # get ranges of the data
   ylim = ggplot_build(plot)$layout$panel_scales_y[[1]]$range$range
@@ -278,7 +299,11 @@ plotPosterior <- function(object, pars = NULL,
                size = text_size)
   }  
 
-  plot = plot + bayesplot_theme_get()
+  plot = plot + 
+    bayesplot_theme_get() +
+    theme(axis.text.y = element_text(angle = 90, hjust = 0.5),
+          axis.title.y = element_text(margin = margin(r = 10)))
+  
   return(plot)
 }
 
